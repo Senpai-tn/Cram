@@ -1,0 +1,190 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.4
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  mar. 23 juil. 2019 à 15:06
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.2.14
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données :  `budget`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `centres`
+--
+
+DROP TABLE IF EXISTS `centres`;
+CREATE TABLE IF NOT EXISTS `centres` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `contrats`
+--
+
+DROP TABLE IF EXISTS `contrats`;
+CREATE TABLE IF NOT EXISTS `contrats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `file` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `engagements`
+--
+
+DROP TABLE IF EXISTS `engagements`;
+CREATE TABLE IF NOT EXISTS `engagements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `libelle` varchar(255) DEFAULT NULL,
+  `montant` decimal(10,0) DEFAULT NULL,
+  `date_de_debut` datetime DEFAULT NULL,
+  `date_de_fin` datetime DEFAULT NULL,
+  `type_de_payement` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `etat` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `fournisseurId` int(11) DEFAULT NULL,
+  `centreId` int(11) DEFAULT NULL,
+  `userId` int(11) DEFAULT NULL,
+  `contratId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fournisseurId` (`fournisseurId`),
+  KEY `centreId` (`centreId`),
+  KEY `userId` (`userId`),
+  KEY `contratId` (`contratId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `fournisseurs`
+--
+
+DROP TABLE IF EXISTS `fournisseurs`;
+CREATE TABLE IF NOT EXISTS `fournisseurs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `users_management` tinyint(1) DEFAULT NULL,
+  `engagements_valid1` tinyint(1) DEFAULT NULL,
+  `engagements_valid2` tinyint(1) DEFAULT NULL,
+  `engagements_agent` tinyint(1) DEFAULT NULL,
+  `notification_agent` tinyint(1) DEFAULT NULL,
+  `notification_valideur1` tinyint(1) DEFAULT NULL,
+  `notification_valideur2` tinyint(1) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `users_management`, `engagements_valid1`, `engagements_valid2`, `engagements_agent`, `notification_agent`, `notification_valideur1`, `notification_valideur2`, `createdAt`, `updatedAt`) VALUES
+(1, 'AGENT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-23 10:03:03', '2019-07-23 10:03:03'),
+(2, 'VALIDEUR1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-23 10:03:03', '2019-07-23 10:03:03'),
+(3, 'VALIDEUR2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-23 10:03:03', '2019-07-23 10:03:03');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `date_of_birth` datetime DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `imgurl` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_roles`
+--
+
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE IF NOT EXISTS `user_roles` (
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `roleId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  PRIMARY KEY (`roleId`,`userId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `engagements`
+--
+ALTER TABLE `engagements`
+  ADD CONSTRAINT `engagements_ibfk_1` FOREIGN KEY (`fournisseurId`) REFERENCES `fournisseurs` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `engagements_ibfk_2` FOREIGN KEY (`centreId`) REFERENCES `centres` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `engagements_ibfk_3` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `engagements_ibfk_4` FOREIGN KEY (`contratId`) REFERENCES `contrats` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`roleId`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

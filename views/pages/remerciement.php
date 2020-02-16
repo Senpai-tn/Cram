@@ -298,12 +298,12 @@ function Show_UI(num)
               },
         dataType:'JSON',
         url: "../Actions/Bill_Actions/Send_Mail_Correspondant_Action.php",
-        success: function(data){ 
-
+        success: function(data){
           if(data['success']=='success')
           {
             $('#show2').modal('hide');
             swal("Success","Mail envoyé","success");
+            $('#sendButton').attr("disabled", false);
           }
           else 
           {

@@ -8,8 +8,8 @@
         <div class="dropdown">
           <button class="btn btn-glow btn-bg-gradient-x-purple-red col-12 round  mr-1 mb-1v dropdown-toggle"  id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Actions <span class="fa fa-ellipsis-h"></span></button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="right-start">
-            <a class="dropdown-item" href="../Actions/Information_Actions/Make_PDF_Action.php"  target="_blank" >Exporter PDF</a>
-            <a class="dropdown-item" href="#"  target="_blank" onclick="Export_XLS()">Exporter Exel</a>
+            <a class="dropdown-item"  data-toggle="modal" onclick="prepare_PDF()" data-target="#myModal" >Exporter PDF</a>
+            <a class="dropdown-item" data-toggle="modal" onclick="prepare_Exel()" data-target="#myModalExel" >Exporter Exel</a>
           </div>
         </div>
       </div>
@@ -64,6 +64,71 @@
 
 </div>
 
+<div class="modal fade" id="myModalExel" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <a target="_blank" href="../Actions/Exel_Maker/Information.php?idc=0&idp=0">Exporter tous les informations</a>
+                </p>
+                <br>
+                <div >
+                    <select class="select2 form-control"  name="correspondantE" id="correspondantE"></select>
+                </div>
+                <p>
+                    <a target="_blank" onclick="Export_XLS('1')" id="myLink" href="" class="btn btn-success" >Exporter les informations du correspondant sélectioné</a>
+                </p>
+                <p>
+                    <div>
+                        <select name="prestataireE" id="prestataireE" class="select2 form-control"></select>
+                    </div>
+                </p>
+                <p>
+                    <a target="_blank" onclick="Export_XLS('2')" id="myLink" href="" class="btn btn-success" >Exporter les informations du prestataire sélectioné</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <a target="_blank" href="../Actions/Information_Actions/Make_PDF_Action.php?idc=0&idp=0">Exporter tous les informations</a>
+                </p>
+                <br>
+                <div >
+                    <select class="select2 form-control"  name="correspondantP" id="correspondantP"></select>
+                </div>
+                <p>
+                    <a target="_blank" onclick="ExportC_PDF('1')" id="myLink" href="" class="btn btn-success" >Exporter les informations du correspondant sélectioné</a>
+                </p>
+                <p>
+                <div>
+                    <select name="prestataireP" id="prestataireP" class="select2 form-control"></select>
+                </div>
+                </p>
+                <p>
+                    <a target="_blank" onclick="ExportC_PDF('2')" id="myLink" href="" class="btn btn-success" >Exporter les informations du prestataire sélectioné</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- exporter -->
 <div class="modal fade text-left" id="modal-exporter" tabindex="-1" role="dialog"  aria-hidden="true">
@@ -266,7 +331,8 @@
 <script>
   var prestataires = "";
   var correspondants="";
-function get_all_data(){
+  var linkpdf="";
+  function get_all_data(){
     $.ajax({
         type:"POST",
         url: "../Actions/Information_Actions/List_Information_Action.php",
@@ -278,6 +344,7 @@ function get_all_data(){
 
 
   }
+
 
 
 function list_prestataire()
@@ -356,7 +423,7 @@ function select_correspondant(n_sequence)
         data:{n_sequence:n_sequence},
         url: "../Actions/Correspondants_Actions/Select_Correspondat_for_information_Action.php",
         success: function(data){  
-              
+
              $('#correspondant_valide').html(correspondants+data);
         }
       
@@ -530,10 +597,33 @@ $(document).ready(function(){
         $('#modal2').modal('show');
      }
 
-       function Export_XLS(){  
-      
-          var excel_data = encodeURIComponent($('#generer-table').html());  
-          location.replace("../Actions/Exel_Maker/Information.php");          
+       function prepare_PDF () {
+           $('#correspondantP').html(correspondants);
+           $('#prestataireP').html(prestataires);
+       }
+
+  function prepare_Exel () {
+      $('#correspondantE').html(correspondants);
+      $('#prestataireE').html(prestataires);
+  }
+        function ExportC_PDF(i) {
+            if(i == 1 )
+                linkpdf ='../Actions/Information_Actions/Make_PDF_Action.php?idc='+$('select[name=correspondantP]').val()+"&idp=0";
+            else
+                linkpdf ='../Actions/Information_Actions/Make_PDF_Action.php?idc=0&idp='+$('select[name=prestataireP]').val();
+
+            window.open(linkpdf, '_blank');
+        }
+
+       function Export_XLS(i){
+           var linkexel="";
+         if(i == 1 )
+            link ="../Actions/Exel_Maker/Information.php?idc="+$('select[name=correspondantE]').val()+"&idp=0";
+         else
+             link ="../Actions/Exel_Maker/Information.php?idc=0&idp="+$('select[name=prestataireE]').val();
+
+         var excel_data = encodeURIComponent($('#generer-table').html());
+         window.open(link,'_blank');
  }
 </script>
 

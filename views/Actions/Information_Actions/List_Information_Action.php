@@ -6,9 +6,13 @@ function test($num)
     return str_replace('"','',$num);
 }
 
+
 try{
+
 		$stmt = $conn->prepare("select *,I.ville as V,E.nom as Name_Event ,I.n_sequence as N, M.chiffre as Chiffre_M,I.code_postal as CP,GROUP_CONCAT(DISTINCT C.nom) as listC ,GROUP_CONCAT(DISTINCT P.raison_sociale) as listP,I.date_facture as dateI ,I.adresse as adressI FROM information as I,evenement as E,relation_information_correspondant as RIC ,moyen as M, correspondant as C,relation_information_prestataire as RIP, prestataire as P where P.num_serie = RIP.num_serie and I.id_event = E.id_event and RIC.n_sequence = I.n_sequence and  C.code = RIC.code and I.code = M.code and RIP.n_sequence=I.n_sequence  GROUP BY I.n_sequence ");
-	    $stmt->execute();
+
+
+    $stmt->execute();
 
 	    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
        /*<th>Validité</th>*/

@@ -6,7 +6,7 @@ else
   $filter = "";
 try{
     $stmt = $conn->prepare("select *,P.abonnement as Ab,FC.`nbr_Signalement` as m ,nbr_Signalement as nbr_Signalement_per_month FROM `facture_client` as FC, prestataire as P where P.num_serie = FC.num_serie 
- HAVING raison_sociale like '%".$filter."%' or date_facture like '%".$filter."%' order by FC.num desc");
+ and p.abonnement > 0 HAVING raison_sociale like '%".$filter."%' or date_facture like '%".$filter."%' order by FC.num desc");
       $stmt->execute();
       
       $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);

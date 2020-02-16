@@ -43,7 +43,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Fermer</button>
-        <button type="button" class="btn btn-primary" onclick="send_Email();">Envoyer</button>
+        <button type="button" class="btn btn-primary" id="sendButton" onclick="send_Email();">Envoyer</button>
       </div>
     </div>
   </div>
@@ -258,6 +258,7 @@ function Show_UI(num)
 
  function send_Email()
 {
+  $('#sendButton').attr("disabled", true);
   $.ajax({
         type:"POST",
         data:{
@@ -266,16 +267,15 @@ function Show_UI(num)
               },
         dataType:'JSON',
         url: "../Actions/Bill_Actions/Send_Mail_Prestataire_Action.php",
-        success: function(data){ 
-
+        success: function(data){
           if(data['success']=='success')
           {
-        
            swal("Success","Mail envoyé","success");
            $('input[name=email]').val('');
-           
+           $('#sendButton').attr("disabled", false);
           }
           else alert(data['success']);
+
         }
       
     });

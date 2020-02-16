@@ -114,7 +114,7 @@ try{
       $date = new DateTime('Europe/London');
       $i=(int)$date->format('N');
       $row=$stmt->fetch();
-      
+      $mois_fr = array("","Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août","Septembre", "Octobre", "Novembre", "Décembre");
       $montant=($row['montant']);
       $d = new DateTime($row['date_facture']);
       $cote = "'";
@@ -127,18 +127,19 @@ try{
 $html.='</head>
 
 <body>
+<img class="brand-logo" alt="Chameleon admin logo" src="../../../public/app-assets/images/logo/logo.png"/>
 <p style="text-align: right; margin-right: 100px;"> '.$row['raison_sociale'].'
 <br>'.$row['adresse'].'<br>
   </p>
 
 
 <center>
-<p style="text-align: center;"><strong> NOISY LE GRAND, LE '.$days[$i-1].' '.$date->format('d F Y').' </strong></p>
-<br>
+<p style="text-align: center;"><strong> NOISY LE GRAND, LE '.$days[$i-1].' '.$date->format('d').' '.$mois_fr[(int)$date->format('m')].' '.$date->format('Y').'</strong></p>
+
 <p style="margin-left: 100px;">NOTE D'.$cote.'honoraire N° '.$row['num_facture'].' </p>
 </center>
 <p style="margin-left: 100px;">Honoraires pour  prestations de service <br>
-  <br>
+
   MOIS DE '. $d->format('F').' '.$d->format('Y').' </p>
 
 <table cellpadding="5" cellspacing="10" style="margin-left:62px">
@@ -183,9 +184,41 @@ $html.='</head>
 </table>
 
 <p>                        valeur en votre aimable  règlement </p>
-<p>&nbsp;</p>
-<p>                                                                                                Marc  ROUSSEAUX </p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p align="center" >Marc ROUSSEAUX </p>
 
+<style>
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 40;
+  width: 100%;
+  text-align: center;
+}
+</style>
+
+<div class="footer">
+ <hr>
+<center>
+    <small>
+        11, Allée du Bataillon Hildevert 93160 Boisy-le-Grand
+    </small>
+    <br>
+    <small>
+        Tél : 06 79 78 14 75 - Email : atcom.mr@gmail.com
+    </small>
+    <br>
+    <font size="2">
+        <small>
+            EURL au capital de 10.000 euros - SIRET 800 912 743 00013 - APE 7010 Z - RCS Bobigny 800 912 743 - N° Id CEE : FR 32 800 912 743 
+        </small>
+    </font>
+</center>
+</div>
 </body>
 </html>
 ';
@@ -214,7 +247,7 @@ $dompdf = new Dompdf();
 $dompdf->loadHtml($html); 
  
 // (Optional) Setup the paper size and orientation 
-$dompdf->setPaper('A4', 'landscape'); 
+$dompdf->setPaper('A4', 'portrait');
  
 // Render the HTML as PDF 
 $dompdf->render(); 

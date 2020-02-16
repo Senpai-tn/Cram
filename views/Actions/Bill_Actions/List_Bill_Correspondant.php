@@ -5,7 +5,7 @@ if($_POST['filter']!="")
 else 
   $filter = "";
 try{
-    $stmt = $conn->prepare("select * FROM facture_correspondant as fc , correspondant as C where fc.code = C.code HAVING nom like '%".$filter."%' or begin_date like '%".$filter."%' or end_date like '%".$filter."%'   order by fc.num desc");
+    $stmt = $conn->prepare("select * FROM facture_correspondant as fc , correspondant as C where fc.code = C.code HAVING nom like '%".$filter."%' or begin_date like '%".$filter."%' or end_date like '%".$filter."%' or fc.num_facture like '%".$filter."'  or  c.departement like '%".$filter."'  order by fc.num desc");
       $stmt->execute();
       
       $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
